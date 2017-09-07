@@ -17,85 +17,72 @@ Class MY_Controller extends CI_Controller
             case 'admin' : {
                 $this->load->helper('language');
                 $this->lang->load('admin/common');
-                $admin_login = $this->session->userdata('user_admindaily_login');
-                $this->data['login'] = $admin_login;
+//                $admin_login = $this->session->userdata('user_admindaily_login');
+//                $this->data['login'] = $admin_login;
                 $this->load->helper('admin');
                 $this->_check_login();
                 break;
             }
 
             default: {
-            $this->load->helper('language');
-            $this->lang->load('admin/common');
-            $this->load->model('admin_model');
-            $this->load->model('userrole_model');
-            $this->load->model('menurole_model');
-            $this->load->model('menu_model');
-            $linkapi = $this->config->item("api_url");
-            $this->data['linkapi'] = $linkapi;
-            $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-            $this->data['login'] = $admin_login;
-            if ($admin_login) {
-                $admin_info = $this->admin_model->get_info($admin_login);
-                $this->data['admin_info'] = $admin_info;
-                $link1 = $this->uri->rsegment('1');
-                $link2 = $this->uri->rsegment('2');
-                if($link2 != "index"){
-                    if($this->menu_model->get_menu_id($link1.'/'.$link2)) {
-                        $menu_id = $this->menu_model->get_menu_id($link1 . '/' . $link2);
-                        $this->data['role'] = $this->get_role_user($admin_login,$menu_id[0]->id);
-                    }else{
-                        $this->data['role'] = false;
+                $this->load->helper('language');
+                $this->lang->load('admin/common');
+                $this->load->model('useragent_model');
+                $this->load->model('userrole_model');
+                $this->load->model('menurole_model');
+                $this->load->model('menu_model');
+                $linkapi = $this->config->item("api_url");
+                $this->data['linkapi'] = $linkapi;
+                $daily = $this->config->item("daily");
+                $this->data['daily'] = $daily;
+                $fee1 = $this->config->item("fee1");
+                $fee2 = $this->config->item("fee2");
+                $this->data['fee1'] = $fee1;
+                $this->data['fee2'] = $fee2;
+                $vin = $this->session->userdata('vin');
+                $this->data['vin'] = $vin;
+                $vippoint = $this->session->userdata('vippoint');
+                $this->data['vippoint'] = $vippoint;
+                $vippointsave = $this->session->userdata('vippointsave');
+                $this->data['vippointsave'] = $vippointsave;
+                $admin_login = $this->session->userdata('user_admindaily_login');
+                $this->data['login'] = $admin_login;
+                if ($admin_login) {
+                    $admin_info = $this->useragent_model->get_info($admin_login);
+                    $this->data['admin_info'] = $admin_info;
+                    $userid = $admin_info->id;
+                    $link1 = $this->uri->rsegment('1');
+                    $link2 = $this->uri->rsegment('2');
+                    if ($link2 != "index") {
+                        if ($this->menu_model->get_menu_id($link1 . '/' . $link2)) {
+                            $menu_id = $this->menu_model->get_menu_id($link1 . '/' . $link2);
+                            $this->data['role'] = $this->get_role_user($admin_login, $menu_id[0]->id);
+                        } else {
+                            $this->data['role'] = false;
+                        }
+                    } else if ($link2 == "index") {
+                        if ($this->menu_model->get_menu_id($link1)) {
+                            $menu_id = $this->menu_model->get_menu_id($link1);
+                            $this->data['role'] = $this->get_role_user($admin_login, $menu_id[0]->id);
+                        } else {
+
+                            $this->data['role'] = false;
+                        }
                     }
-                }else{
-                    if($this->menu_model->get_menu_id($link1)) {
-                        $menu_id = $this->menu_model->get_menu_id($link1);
-                        $this->data['role'] = $this->get_role_user($admin_login,$menu_id[0]->id);
-                    }else{
-                        $this->data['role'] = false;
-                    }
+                    $list = $this->GetMenuLeftByUser($userid);
+                    $this->data['menu_list'] = $list;
                 }
-
-                $list = $this->GetMenuLeftByUser($admin_info->ID, $admin_info->Status);
-                $this->data['menu_list'] = $list;
+                $this->load->helper('admin');
+                $this->_check_login();
             }
-            $this->load->helper('admin');
-            $this->_check_login();
-
-            }
-
         }
     }
 
-    /*
-     * Kiem tra trang thai dang nhap cua admin
-     */
-    private function _check_login()
+    function GetMenuLeftByUser($user_id)
     {
-        $controller = $this->uri->rsegment('1');
-        $controller = strtolower($controller);
-
-        $login = $this->session->userdata('user_AdminIxengClub_login');
-        //neu ma chua dang nhap,ma truy cap 1 controller khac login
-        if (!$login && $controller != 'login') {
-            redirect(base_url('login'));
-        }
-        //neu ma admin da dang nhap thi khong cho phep vao trang login nua.
-        if ($login && $controller == 'login') {
-            redirect(base_url(''));
-        }
-    }
-
-
-    function GetMenuLeftByUser($user_id, $status)
-    {
-        $this->load->model('admin_model');
-        $this->load->model('userrole_model');
-        $this->load->model('menurole_model');
         $str = "";
         //lấy group_id theo userid
         $list_group_id = $this->userrole_model->get_list_role_by_userid($user_id);
-
         if (!empty($list_group_id)) {
             foreach ($list_group_id as $group_id_item) {
                 //lấy danh sách các menu_id theo group id
@@ -107,16 +94,16 @@ Class MY_Controller extends CI_Controller
                         if (!empty($list_name)) {
                             foreach ($list_name as $menu_name_item) {
                                 $list_menu_child = $this->menu_model->get_list_menu_name_by_parrent_id($menu_item->Menu_ID, $group_id_item->Group_ID);
-                                    $str .= "<li>";
-                                    $str .= "<a href=".base_url($menu_name_item->Link)."><i class=\"fa fa-dashboard\"></i><span>".$menu_name_item->Name."</span></a>";
-                                    if (!empty($list_menu_child)) {
-                                        $str .= "<ul class=\"treeview-menu\">";
-                                        foreach ($list_menu_child as $menu_child) {
-                                            $str .= "<li><a href=".base_url($menu_child->Link)."><i class=\"fa fa-circle-o\"></i>$menu_child->Name</a></li>";
-                                        }
-                                        $str .= "</ul>";
+                                $str .= "<li>";
+                                $str .= "<a href=" . base_url($menu_name_item->Link) . "><i class=\"fa fa-dashboard\"></i><span>" . $menu_name_item->Name . "</span></a>";
+                                if (!empty($list_menu_child)) {
+                                    $str .= "<ul class=\"treeview-menu\">";
+                                    foreach ($list_menu_child as $menu_child) {
+                                        $str .= "<li><a href=" . base_url($menu_child->Link) . "><i class=\"fa fa-circle-o\"></i>$menu_child->Name</a></li>";
                                     }
-                                    $str .= " </li>";
+                                    $str .= "</ul>";
+                                }
+                                $str .= " </li>";
 
                             }
                         }
@@ -126,16 +113,38 @@ Class MY_Controller extends CI_Controller
         }
         return $str;
     }
-    function get_role_user($user_id,$menu_id){
+
+    /*
+     * Kiem tra trang thai dang nhap cua admin
+     */
+    private function _check_login()
+    {
+        $controller = $this->uri->rsegment('1');
+        $controller = strtolower($controller);
+
+        $login = $this->session->userdata('user_admindaily_login');
+        //neu ma chua dang nhap,ma truy cap 1 controller khac login
+        if (!$login && $controller != 'login') {
+            redirect(base_url('login'));
+        }
+        //neu ma admin da dang nhap thi khong cho phep vao trang login nua.
+        if ($login && $controller == 'login') {
+            redirect(base_url(''));
+        }
+    }
+
+    function get_role_user($user_id, $menu_id)
+    {
         $this->load->model('userrole_model');
-        $role = $this->userrole_model->get_list_role_menu($user_id,$menu_id);
+        $role = $this->userrole_model->get_list_role_menu($user_id, $menu_id);
         return $role;
     }
+
     function Check_Url_Admin($current_url)
     {
         $this->load->model('accesslink_model');
         //lấy id của user đăng nhập
-        $admin_login = $this->session->userdata('user_AdminIxengClub_login');
+        $admin_login = $this->session->userdata('user_id_login');
         //lấy tất cả các link của user đó
         $list_link = $this->accesslink_model->get_list_linkacess_userid($admin_login);
 
@@ -178,7 +187,9 @@ Class MY_Controller extends CI_Controller
         $ci->pagination->initialize($config);
         return $config;
     }
-    function dateDiff($start, $end) {
+
+    function dateDiff($start, $end)
+    {
         date_default_timezone_set('Asia/Bangkok');
         $start_ts = strtotime($start);
         $end_ts = strtotime($end);
@@ -187,22 +198,27 @@ Class MY_Controller extends CI_Controller
     }
 
 
-    function rand_string( $length ) {
-    $str = "";
-    $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    $size = strlen( $chars );
-    for( $i = 0; $i < $length; $i++ ) {
-        $str .= $chars[ rand( 0, $size - 1 ) ];
+    function rand_string($length)
+    {
+        $str = "";
+        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $size = strlen($chars);
+        for ($i = 0; $i < $length; $i++) {
+            $str .= $chars[rand(0, $size - 1)];
+        }
+        return $str;
     }
-    return $str;
-}
-    function logadmindata($ac,$nn,$us){
-        $data = array( 'action' => $this->actionadmin($ac),
+
+    function logadmindata($ac, $nn, $us)
+    {
+        $data = array('action' => $this->actionadmin($ac),
             'account_name' => $nn,
-            'username' => $us );
+            'username' => $us);
         return $data;
     }
-    function logadmingiftcode($ac,$nn,$us,$q,$mo,$ty){
+
+    function logadmingiftcode($ac, $nn, $us, $q, $mo, $ty)
+    {
         $data = array(
             'action' => $this->actionadmin($ac),
             'account_name' => $nn,
@@ -214,8 +230,8 @@ Class MY_Controller extends CI_Controller
         return $data;
     }
 
-
-    function actionadmin($count) {
+    function actionadmin($count)
+    {
         switch ($count) {
             case 1:
                 $strresult = "Thêm mới tài khoản đại lý";
@@ -233,7 +249,7 @@ Class MY_Controller extends CI_Controller
                 $strresult = "Đổi mật khẩu admin đại lý";
                 break;
             case 6:
-                $strresult = "Tạo kho gift code đại lý";
+                $strresult = "Tạo kho gift code";
                 break;
             case 7:
                 $strresult = "Chuyển giftcode cho đại lý";
@@ -248,68 +264,38 @@ Class MY_Controller extends CI_Controller
                 $strresult = "Xóa cầu tài xỉu";
                 break;
             case 11:
-                $strresult = "Cộng tiền marketing";
+                $strresult = "Đại lý xuất giftcode";
                 break;
             case 12:
-                $strresult = "Cộng trừ tiền admin";
-                break;
-            case 13:
-                $strresult = "Tạo kho gift code marketing";
-                break;
-            case 14:
-                $strresult = "Chuyển gift code marketing";
-                break;
-            case 15:
-                $strresult = "Tạo kho giftcode minigame";
-                break;
-            case 16:
-                $strresult = "Chuyển giftcode minigame";
-                break;
-            case 17:
-                $strresult = "Tạo kho giftcode vận hành";
-                break;
-            case 18:
-                $strresult = "Chuyển giftcode cho vận hành";
-                break;
-
-            case 19:
-                $strresult = "Trả thưởng vippoint event";
-                break;
-            case 20:
-                $strresult = "Cộng tiền  cho nhiều tài khoản";
-                break;
-            case 21:
-                $strresult = "Hủy bảo mật";
-                break;
-            case 22:
-                $strresult = "Xuất code Pokertour";
+                $strresult = "Làm lại đại lý";
                 break;
         }
         return $strresult;
     }
-    function get_data_curl($url){
-        $ch = curl_init();
-        $timeout = 1000;
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        $data = curl_exec($ch);
-        curl_close($ch);
 
-        return $data;
-    }
-    function get_client_ip() {
-        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
-            if (array_key_exists($key, $_SERVER) === true){
-                foreach (explode(',', $_SERVER[$key]) as $ip){
-                    $ip = trim($ip); // just to be safe
+    function  checkRoleMenu()
+    {
+        $admin_login = $this->session->userdata('user_admindaily_login');
+        if ($admin_login) {
+            $link1 = $this->uri->rsegment('1');
+            $link2 = $this->uri->rsegment('2');
+            if ($link2 != "index") {
+                if ($this->menu_model->get_menu_id($link1 . '/' . $link2)) {
+                    $menu_id = $this->menu_model->get_menu_id($link1 . '/' . $link2);
+                    $result = $this->get_role_user($admin_login, $menu_id[0]->id);
+                } else {
+                    $result = false;
+                }
+            } else if ($link2 == "index") {
+                if ($this->menu_model->get_menu_id($link1)) {
+                    $menu_id = $this->menu_model->get_menu_id($link1);
+                    $result = $this->get_role_user($admin_login, $menu_id[0]->id);
+                } else {
 
-                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
-                        return $ip;
-                    }
+                    $result = false;
                 }
             }
         }
+        return $result;
     }
-
 }

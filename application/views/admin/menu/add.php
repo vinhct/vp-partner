@@ -1,4 +1,4 @@
-<?php if($admin_info->Status == "A"): ?>
+<?php if($admin_info->status == "A"): ?>
 <section class="content-header">
     <h1>
         Thêm mới menu
@@ -65,9 +65,7 @@
                                     <label class="col-sm-2 control-label">Loại menu</label>
                                     <div class="col-sm-3">
                                         <select class="form-control" name="typemenu">
-                                            <option value="1" >Menu Super</option>
-                                            <option value="2" >Menu Admin</option>
-                                            <option value="3" >Menu Đại lý</option>
+                                            <option value="3" >Menu</option>
                                         </select>
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-<?php if($admin_info->Status == "A"): ?>
+<?php if($admin_info->status == "A"): ?>
 <section class="content-header">
     <h1>
         Sửa menu
@@ -76,9 +76,8 @@
 
                                     <div class="col-sm-2">
                                         <select class="form-control" name="typemenu">
-                                            <option value="1" <?php if($info->isSuper == 1 ) {echo "selected"; }?>>Menu Super</option>
-                                            <option value="2" <?php if($info->isThuong == 1 ) {echo "selected"; }?>>Menu Admin</option>
-                                            <option value="3" <?php if($info->isDaily == 1 ) {echo "selected"; }?>>Menu Đại lý</option>
+                                           
+                                            <option value="3" <?php if($info->isDaily == 1 ) {echo "selected"; }?>>Menu</option>
                                         </select>
                                     </div>
                                 </div>

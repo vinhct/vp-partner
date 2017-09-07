@@ -4,110 +4,82 @@ Class Login extends MY_controller
 {
     function index()
     {
-        $this->load->library('form_validation');
-        $this->load->helper('form');
-        if ($this->input->post()) {
-            $this->form_validation->set_rules('login', 'login', 'callback_check_login');
-            if ($this->form_validation->run()) {
-                $user = $this->_get_user_info();
-                $this->session->set_userdata('user_AdminIxengClub_login', $user->ID);
-                redirect(base_url(''));
-            }
-        }
-        $this->load->view('admin/login/index');
+       $this->data['errors'] = '';
+        $this->data['message'] = '';
+        $this->data['flag'] = '';
+        $this->data['nickname'] = '';
+        $this->data['vintotal'] = '';
+        $this->data['temp'] = 'admin/index';
+        $this->load->view('admin/login/index', $this->data);
     }
 
-    function loginajax(){
+    function  loginTest(){
         $username = $this->input->post('username');
-        $password =  $this->input->post('password');
-        $datainfo = file_get_contents($this->config->item('api_url').'?c=701&un='.$username.'&pw=' . $password);
-        $data = json_decode($datainfo);
-        if($data->success == true){
-            $nickname = json_decode(base64_decode($data->sessionKey))->nickname;
-            $access = $data->accessToken;
-            $this->session->set_userdata('nicknameadmin', $nickname);
-            $this->session->set_userdata('accessadmin', $access);
-            $this->log_login_admin($username,"Thành công",0);
-        }else{
-            if($data->errorCode == 1001){
-                $this->log_login_admin($username,"Hệ thống gián đoạn",1);
-            }
-            if($data->errorCode == 1005){
-                $this->log_login_admin($username,"Username không tồn tại",1);
-            }
-            if($data->errorCode == 1007){
-                $this->log_login_admin($username,"Password không đúng",1);
-            }
-            if($data->errorCode == 1109){
-                $this->log_login_admin($username,"Tài khoản bị khóa đăng nhập",1);
-            }
-            if($data->errorCode == 1114){
-                $this->log_login_admin($username,"Hệ thống bảo trì",1);
-            }
-            if($data->errorCode == 2001){
-                $this->log_login_admin($username,"Tài khoản chưa cập nhật nickname",1);
-            }
-            if($data->errorCode == 1012){
-                $this->log_login_admin($username,"Tài khoản đăng nhập bằng OTP",1);
-            }
-        }
-        if(isset($datainfo)) {
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
+        $password = $this->input->post('password');
+        try {
+            $userinfo = file_get_contents($this->config->item('api_url') . '?c=701&un=' . $username . '&pw=' . md5($password));
 
-    function getodpajax(){
-        $nickname = $this->input->post('nickname');
-        $datainfo = file_get_contents($this->config->item('api').'?c=131&nn='.$nickname);
-        if(isset($datainfo)) {
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
+            if($userinfo){
+            $data = json_decode($userinfo);
+            if ($data->success) {
+                $info = json_decode(base64_decode($data->sessionKey));
+                $nickname = $info->nickname;
+                $vinTotal = $info->vinTotal;
+                $vippoint = $info->vippoint;
+                $vippointSave = $info->vippointSave;
+                  $accessToken =  $data->accessToken;
 
-    function loginodpajax(){
-        $nickname = $this->input->post('nickname');
-        $username = $this->input->post('username');
-        $otp =  $this->input->post('otp');
-        $datainfo = file_get_contents($this->config->item('api').'?c=132&nn='.$nickname.'&otp='. $otp);
-
-        if($datainfo == 0){
-            if($this->infouser($nickname) == true){
-                echo json_encode("1");
-                $this->log_login_admin($username,"Login ODP",0);
-            }else{
-                $this->log_login_admin($username,"Tài khoản chưa được phân quyền",1);
-                echo json_encode("2");
+                $message = '';
+                $flag = 0;
+                if ($data->errorCode == 1001) {
+                    $message = 'Bạn không có quyền truy cập';
+                } else if ($data->errorCode == 1005) {
+                    $message = 'Tên đăng nhập không tồn tại';
+                } else if ($data->errorCode == 1007) {
+                    $message = 'Mật khẩu không chính xác';
+                } else if ($data->errorCode == 1009) {
+                    $message = 'Tài khoản bị khóa';
+                } elseif ($data->errorCode == 0) {
+                    $flag = 1;
+                    $this->infouser($nickname, $vinTotal,$vippoint,$vippointSave,$accessToken);
+                    redirect(base_url());
+                }
+                $this->data['vintotal'] = $vinTotal;
+                $this->data['nickname'] = $nickname;
+                $this->data['flag'] = $flag;
+                $this->data['errors'] = $message;
+            } else {
+                if ($data->errorCode == 1001) {
+                    $message = 'Bạn không có quyền truy cập';
+                } else if ($data->errorCode == 1005) {
+                    $message = 'Tên đăng nhập không tồn tại';
+                } else if ($data->errorCode == 1007) {
+                    $message = 'Mật khẩu không chính xác';
+                } else if ($data->errorCode == 1009) {
+                    $message = 'Tài khoản bị khóa';
+                }
+                $this->data['errors'] = $message;
+                $this->data['vintotal'] = '';
+                $this->data['nickname'] = '';
+                $this->data['flag'] = '0';
             }
         }
-           else if($datainfo == 1){
-               $this->log_login_admin($username,"Hệ thống gián đoạn",1);
-                echo json_encode("3");
+            else{
+                $this->data['errors'] = "Hệ thống bị gián đoạn";
+                $this->data['vintotal'] = '';
+                $this->data['nickname'] = '';
+                $this->data['flag'] = '0';
+
             }
-            else if($datainfo == 2){
-                $this->log_login_admin($username,"Nickname không tồn tại",1);
-                echo json_encode("4");
-            }
-           else if($datainfo == 3){
-               $this->log_login_admin($username,"Nickname không phải là admin",1);
-                echo json_encode("5");
-            }
-           else if($datainfo == 4){
-               $this->log_login_admin($username,"Tài khoản chưa đăng ký bảo mật trên trang vinplay.com",1);
-                echo json_encode("6");
-            }
-           else if($datainfo == 5){
-               $this->log_login_admin($username,"ODP sai",1);
-                echo json_encode("7");
-            }
-           else if($datainfo == 6){
-               $this->log_login_admin($username,"ODP hết hạn",1);
-               echo json_encode("8");
-           }
+        }
+        catch(Exception $e){
+            echo"1001";
+        }
+        $this->data['temp'] = 'admin/login/index';
+        $this->load->view('admin/login/index', $this->data);
+
     }
+    
     private function _get_user_info()
     {
         $username = $this->input->post('username');
@@ -130,19 +102,23 @@ Class Login extends MY_controller
         $this->form_validation->set_message(__FUNCTION__, 'Không đăng nhập thành công');
         return false;
     }
-    function infouser($nickname){
-        $this->load->model('admin_model');
-        $where = array('FullName' => $nickname,'isThuong'=>2);
-        $user = $this->admin_model->get_info_rule($where);
-        if($user == false){
-            return false;
-        }else{
-            $this->session->set_userdata('user_AdminIxengClub_login', $user->ID);
-            return true;
+   function infouser($nickname, $vin,$vippoint,$vippointsave,$accessToken)
+    {
+         $this->load->model('useragent_model');
+        $where = array('nickname' => $nickname, 'active' => 1);
+        $user = $this->useragent_model->get_info_rule($where);
+        if ($user == false) {
+            echo json_encode("Tài khoản chưa được phân quyền hoặc đang bị khóa");
+        } else {
+
+            $this->session->set_userdata("vin", $vin);
+            $this->session->set_userdata("vippoint", $vippoint);
+            $this->session->set_userdata("vippointsave", $vippointsave);
+            $this->session->set_userdata('user_admindaily_login', $user->id);
+              $this->session->set_userdata('accessToken', $accessToken);
+              $this->session->set_userdata("nickname", $nickname);
         }
-
     }
-
     function log_login_admin($username,$action,$status){
         $this->load->model('admin_model');
         $this->load->model('log_loginadmin_model');

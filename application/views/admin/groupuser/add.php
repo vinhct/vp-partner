@@ -1,5 +1,5 @@
 
-<?php if($admin_info->Status == "A"): ?>
+<?php if($admin_info->status == "A"): ?>
 <section class="content-header">
     <h1>
         Thêm mới nhóm người dùng
@@ -44,9 +44,8 @@
                                     <label class="col-sm-2 control-label">Loại nhóm</label>
                                     <div class="col-sm-3">
                                         <select class="form-control" name="typegroup">
-                                            <option value="1" >Nhóm Super</option>
-                                            <option value="2" >Nhóm Admin</option>
-                                            <option value="3" >Nhóm Đại lý</option>
+                                           
+                                            <option value="3" >Nhóm Đối tác</option>
                                         </select>
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-<?php if($admin_info->Status == "A"): ?>
+<?php if($admin_info->status == "A"): ?>
 <section class="content-header">
     <h1>
         Cập nhật nhóm người dùng
@@ -43,9 +43,8 @@
                                     <label class="col-sm-2 control-label">Loại nhóm</label>
                                     <div class="col-sm-3">
                                         <select class="form-control" name="typegroup">
-                                            <option value="1" <?php if($info->Type == 1) { echo 'selected'; } ?> >Nhóm Super</option>
-                                            <option value="2" <?php if($info->Type == 2) { echo 'selected'; } ?> >Nhóm Admin</option>
-                                            <option value="3" <?php if($info->Type == 3) { echo 'selected'; } ?>>Nhóm Đại lý</option>
+                                         
+                                            <option value="3" <?php if($info->Type == 3) { echo 'selected'; } ?>>Nhóm đối tác</option>
                                         </select>
                                     </div>
                                 </div>

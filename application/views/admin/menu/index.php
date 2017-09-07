@@ -1,4 +1,4 @@
-<?php if($admin_info->Status != "A"): ?>
+<?php if($admin_info->status != "A"): ?>
     <section class="content-header">
         <h1>
             Bạn chưa được phân quyền
@@ -18,63 +18,13 @@
                     <div id="tabs-container">
 
                         <ul class="tabs-menu">
-                            <li class="current"><a href="#tab-1">Menu super</a></li>
-                            <li><a href="#tab-2">Menu admin</a></li>
-                            <li><a href="#tab-3">Menu đại lý</a></li>
                             <input type="reset" value="Thêm mới" name="submit"
                                    class="btn btn-success pull-left" id="reset"  onclick="window.location.href = '<?php echo base_url('menu/add') ?>'; ">
 
                         </ul>
                         <div class="tab">
-                            <div id="tab-1" class="tab-content">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <?php if (isset($message) && $message): ?>
-                                            <?php echo $message ?>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <table id="example2" class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>STT</th>
-                                                <th>Tên menu</th>
-                                                <th>Số thứ tự</th>
-                                                <th>Thao tác</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php echo $listsuper; ?>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="tab-2" class="tab-content">
-                                <div class="row">
-
-                                    <div class="col-sm-12">
-                                        <?php if (isset($message) && $message): ?>
-                                            <?php echo $message ?>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <table id="example2" class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>STT</th>
-                                                <th>Tên menu</th>
-                                                <th>Số thứ tự</th>
-                                                <th>Thao tác</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php echo $listadmin; ?>
-                                        </table>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div id="tab-3" class="tab-content">
+                            
+                           
                                 <div class="row">
                                     <div class="col-sm-12">
 
@@ -97,8 +47,6 @@
                                             <?php echo $listagent; ?>
                                         </table>
                                     </div>
-
-                                </div>
                             </div>
                         </div>
                     </div>

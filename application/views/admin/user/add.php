@@ -1,4 +1,4 @@
-<?php if($admin_info->Status == "A"): ?>
+<?php if($admin_info->status == "A"): ?>
 <section class="content-header">
     <h1>
         Thêm mới người dùng

@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://192.168.0.105:8080/AdminIxengClub/';
+$config['base_url'] = 'http://localhost:81/vp-partner/';
 //$config['api_url'] = 'http://192.168.0.112:8082/api_backend';
 //$config['api_url'] = 'http://104.199.239.38:8082/api_backend';
 $config['api_url'] = 'http://210.211.101.230:8082/api_backend';

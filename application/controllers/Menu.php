@@ -312,6 +312,7 @@ Class Menu extends MY_Controller
         $this->load->model('menu_model');
         $categorys = $this->menu_model->get_category();
         $stt = 1;
+        if($categorys!=null){
         foreach ($categorys as $category) {
             $str .= "<tr>";
             $str .= "<td class=\"textC\">$stt</td>";
@@ -328,6 +329,7 @@ Class Menu extends MY_Controller
             $str .= "</tr>";
             $str .= $this->get_sub_list_menu($category->id, $i = 0);
             $stt++;
+        }
         }
         return $str;
     }
@@ -371,6 +373,7 @@ Class Menu extends MY_Controller
         $this->load->model('menu_model');
         $categorys = $this->menu_model->get_menu_admin();
         $stt = 1;
+        if($categorys!=null){
         foreach ($categorys as $category) {
             $str .= "<tr>";
             $str .= "<td class=\"textC\">$stt</td>";
@@ -388,6 +391,7 @@ Class Menu extends MY_Controller
             $str .= $this->get_sub_list_menu_admin($category->id, $i = 0);
             $stt++;
         }
+    }
         return $str;
     }
 
@@ -430,6 +434,7 @@ Class Menu extends MY_Controller
         $this->load->model('menu_model');
         $categorys = $this->menu_model->get_menu_agent();
         $stt = 1;
+        if($categorys!=null){
         foreach ($categorys as $category) {
             $str .= "<tr>";
             $str .= "<td class=\"textC\">$stt</td>";
@@ -446,6 +451,7 @@ Class Menu extends MY_Controller
             $str .= "</tr>";
             $str .= $this->get_sub_list_menu_agent($category->id, $i = 0);
             $stt++;
+        }
         }
         return $str;
     }

@@ -1,5 +1,5 @@
 <!-- head -->
-<?php if($admin_info->Status != "A"): ?>
+<?php if($admin_info->status != "A"): ?>
     <section class="content-header">
         <h1>
             Bạn chưa được phân quyền
@@ -19,112 +19,16 @@
                     <div id="tabs-container">
 
                         <ul class="tabs-menu">
-                            <li class="current"><a href="#tab-1">Nhóm Super</a></li>
-                            <li><a href="#tab-2">Nhóm admin</a></li>
-                            <li><a href="#tab-3">Nhóm đại lý</a></li>
+                            
                             <input type="reset" value="Thêm mới" name="submit"
                                    class="btn btn-success pull-left" id="reset"
                                    onclick="window.location.href = '<?php echo base_url('groupuser/add') ?>'; ">
 
                         </ul>
                         <div class="tab">
-                            <div id="tab-1" class="tab-content">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <?php if (isset($message) && $message): ?>
-                                            <?php echo $message ?>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <table id="example2" class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>STT</th>
-                                                <th>Tên nhóm</th>
-                                                <th>Ghi chú</th>
-                                                <th>Thao tác</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php $i = 1; ?>
-                                            <?php
-                                            foreach ($list as $row): ?>
-                                                <tr>
-                                                    <td>
-                                                        <?php echo $i; ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo $row->Name; ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo $row->Description; ?>
-                                                    </td>
-                                                    <td>
-                                                        <a href="<?php echo base_url('groupuser/edit/' . $row->Id)?>">
-                                                           <img src="<?php echo public_url('admin/images/edit.png')?>">
-                                                        </a>
-                                                        <a class="verify_action" href="<?php echo base_url('groupuser/delete/' . $row->Id)?>">
-                                                            <img src="<?php echo public_url('admin/images/delete.png')?>">
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <?php $i ++; ?>
-                                            <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="tab-2" class="tab-content">
-                                <div class="row">
-
-                                    <div class="col-sm-12">
-                                        <?php if (isset($message) && $message): ?>
-                                            <?php echo $message ?>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <table id="example2" class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>STT</th>
-                                                <th>Tên nhóm</th>
-                                                <th>Ghi chú</th>
-                                                <th>Thao tác</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php $i = 1; ?>
-                                            <?php
-                                            foreach ($listadmin as $row): ?>
-                                                <tr>
-                                                    <td>
-                                                        <?php echo $i; ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo $row->Name; ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo $row->Description; ?>
-                                                    </td>
-                                                    <td>
-                                                        <a href="<?php echo base_url('groupuser/edit/' . $row->Id)?>">
-                                                            <img src="<?php echo public_url('admin/images/edit.png')?>">
-                                                        </a>
-                                                        <a class="verify_action" href="<?php echo base_url('groupuser/delete/' . $row->Id)?>">
-                                                            <img src="<?php echo public_url('admin/images/delete.png')?>">
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <?php $i ++; ?>
-                                            <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div id="tab-3" class="tab-content">
+                            
+                            
+                           
                                 <div class="row">
                                     <div class="col-sm-12">
 
@@ -171,8 +75,6 @@
                                             </tbody>
                                         </table>
                                     </div>
-
-                                </div>
                             </div>
                         </div>
                     </div>

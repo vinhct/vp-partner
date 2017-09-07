@@ -6,7 +6,7 @@
                      alt="User Image">
             </div>
             <div class="pull-left info">
-                <p><?php echo $admin_info->FullName ?></p>
+                <p><?php echo $admin_info->nickname ?></p>
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>
@@ -15,6 +15,16 @@
             <li>
                 <a href="<?php echo base_url() ?>">
                     <i class="fa fa-dashboard"></i><span>Trang chủ</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo base_url("/menu") ?>">
+                    <i class="fa fa-dashboard"></i><span>Menu</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo base_url("/groupuser") ?>">
+                    <i class="fa fa-dashboard"></i><span>Nhóm menu</span>
                 </a>
             </li>
             <?php if (isset($admin_info)) :  ?>
