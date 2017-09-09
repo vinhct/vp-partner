@@ -8,7 +8,7 @@ function Check_Url_Admin($current_url)
 {
     $this->load->model('accesslink_model');
     //lấy id của user đăng nhập
-    $admin_login = $this->session->userdata('user_AdminIxengClub_login');
+    $admin_login = $this->session->userdata('user_admindaily_login');
     $this->data['login'] = $admin_login;
     //lấy tất cả các link của user đó
     $list_link = $this->accesslink_model->get_list_linkacess_userid($admin_login->ID);
@@ -21,3 +21,42 @@ function Check_Url_Admin($current_url)
         }
     }
 }
+/**
+ * Fetches Remote Page Contents
+ * @param string $url
+ * @return string
+ */
+function readURLAPI($url) {
+    $ch = curl_init();
+    $timeout = 1000;
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+    $data = curl_exec($ch);
+    curl_close($ch);
+
+    return $data;
+}
+function lastday($month = '', $year = '') {
+       if (empty($month)) {
+          $month = date('m');
+       }
+       if (empty($year)) {
+          $year = date('Y');
+       }
+       $result = strtotime("{$year}-{$month}-01");
+       $result = strtotime('-1 second', strtotime('+1 month', $result));
+       return date('Y-m-d 23:59:59', $result);
+    }
+
+    function firstDay($month = '', $year = '')
+    {
+        if (empty($month)) {
+          $month = date('m');
+       }
+       if (empty($year)) {
+          $year = date('Y');
+       }
+       $result = strtotime("{$year}-{$month}-01");
+       return date('Y-m-d 00:00:00', $result);
+    } 

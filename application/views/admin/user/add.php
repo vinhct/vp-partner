@@ -12,122 +12,16 @@
                 <div class="box-body">
                     <div id="tabs-container">
 
-                        <ul class="tabs-menu">
-                            <li class="current"><a href="#tab-1">Tài khoản Admin</a></li>
-                            <li><a href="#tab-2">Tài khoản đại lý</a></li>
-
-                        </ul>
                         <div class="tab">
-                            <div id="tab-1" class="tab-content">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                        </div>
-                                        <label for="inputEmail3" class="col-sm-3 control-label" id="errorstatus"
-                                               style="color: red"></label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-sm-2">
-                                        </div>
-                                        <label for="inputEmail3" class="col-sm-1 control-label">Nick name:</label>
-
-                                        <div class="col-sm-2">
-                                            <input type="text" class="form-control" placeholder="Nhập nickname"
-                                                   id="param_name">
-                                        </div>
-                                        <div class="col-sm-1">
-                                            <input type="button" value="Tìm kiếm" class="btn btn-success pull-left"
-                                                   id="abc1111">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="info_user" style="display: none">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-sm-2">
-                                            </div>
-                                            <label class="col-sm-1 control-label">Username:</label>
-
-                                            <div class="col-sm-2">
-                                                <input type="text" class="form-control" readonly id="txtusername">
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-sm-2">
-                                            </div>
-                                            <label class="col-sm-1 control-label">Nickname:</label>
-
-                                            <div class="col-sm-2">
-                                                <input type="text" class="form-control" id="txtnickname" readonly>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-sm-2">
-                                            </div>
-                                            <label class="col-sm-1 control-label">Bộ phận</label>
-
-                                            <div class="col-sm-2">
-                                                <select class="form-control" id="selectchucnang">
-                                                    <option value="W">Vận hành</option>
-                                                    <option value="M">Maketing</option>
-                                                    <option value="S">Chăm sóc khách hàng</option>
-                                                    <option value="L">Lãnh đạo</option>
-                                                    <option value="D">Chăm sóc đại lý</option>
-                                                    <option value="Q">Quản lý chung</option>
-                                                    <option value="K">Kế toán</option>
-                                                    <option value="C">Developer</option>
-                                                    <option value="A">Administrator</option>
-                                                </select>
+                              <form id="form" class="form" enctype="multipart/form-data" method="post" action="add">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                </div>
+                                                <label for="inputEmail3" class="col-sm-3 control-label" id="errorstatusagent"
+                                                       style="color: red"><?php echo $error?></label>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-sm-2">
-                                            </div>
-                                            <label class="col-sm-1 control-label">Phân quyền</label>
-
-                                            <div class="col-sm-2">
-                                                <select class="form-control" id="selectrole">
-                                                    <option value="">Chọn</option>
-                                                    <?php foreach ($listrole as $row): ?>
-                                                        <option value="<?php echo $row->Id ?>"><?php echo $row->Name ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-sm-3"></div>
-                                            <div class="col-sm-2">
-                                                <input type="button" value="Thêm mới" id="setadmin"
-                                                       class="btn btn-success pull-left">
-                                            </div>
-                                            <div class="col-sm-4"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div id="tab-2" class="tab-content">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                        </div>
-                                        <label for="inputEmail3" class="col-sm-3 control-label" id="errorstatusagent"
-                                               style="color: red"></label>
-                                    </div>
-                                </div>
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-sm-2">
@@ -135,7 +29,7 @@
                                                 <label class="col-sm-1 control-label">Username:</label>
 
                                                 <div class="col-sm-2">
-                                                    <input type="text" class="form-control" id="txtusernameagent">
+                                                    <input type="text" class="form-control" id="username" name="username" >
                                                 </div>
                                                 <div class="col-sm-4"><label class="control-label" for="inputError"
                                                                              style="color: #ff0000"></label>
@@ -150,7 +44,7 @@
                                                 <label class="col-sm-1 control-label">Nickname:</label>
 
                                                 <div class="col-sm-2">
-                                                    <input type="text" class="form-control" id="txtnicknameagent">
+                                                    <input type="text" class="form-control" id="nickname" name="nickname" >
                                                 </div>
                                                 <div class="col-sm-4"><label class="control-label" for="inputError"
                                                                              style="color: #ff0000"></label>
@@ -158,19 +52,32 @@
 
                                             </div>
                                         </div>
+                                         <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                </div>
+                                                <label class="col-sm-1 control-label">Nhóm:</label>
+
+                                                <div class="col-sm-2">
+                                                <select id='groupuser' name='groupuser' class='form-control'>
+                                               <?php echo $groupuser?> 
+                                               
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>       
+
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-sm-3"></div>
                                                 <div class="col-sm-2">
-                                                    <input type="button" value="Thêm mới"
-                                                           class="btn btn-success pull-left" id="setagent">
+                                                    <input type="submit" value="Thêm mới"
+                                                           class="btn btn-success pull-left" id="create" name="create">
                                                 </div>
                                                 <div class="col-sm-4"></div>
                                             </div>
                                         </div>
-
-                            </div>
-
+                                        </form>
                         </div>
                     </div>
                 </div>
@@ -318,61 +225,9 @@
 
 
 </script>
+
 <script>
-    $("#setadmin").click(function () {
-        $("#spinner").show();
-        $.ajax({
-            type: "POST",
-            url: "<?php echo base_url('user/addadmin')?>",
-            dataType: 'json',
-            data: {
-                username: $("#txtusername").val()
-            },
-            success: function (res) {
-                $("#spinner").hide();
-                if (res == 1) {
-                    $("#errorstatus").html("Tài khoản đã tồn tại");
-                } else if (res == 2) {
-                    $.ajax({
-                        type: "POST",
-                        url: "<?php echo base_url("/user/addadminajax"); ?>",
-                        dataType: 'json',
-                        data: {
-                            username: $("#txtusername").val(),
-                            nickname: $("#txtnickname").val(),
-                            status: $("#selectchucnang").val(),
-                            role: $("#selectrole").val()
-                        },
-                        success: function (response) {
-                            if (response.errorCode == 0) {
-                                var baseurl = "<?php echo base_url('user') ?>";
-                                window.location.href = baseurl;
-                            } else if (response.errorCode == 1001) {
-                                $("#errorstatus").html("Hệ thống gián đoạn");
-                            }
-                        }
-                    });
-
-                }
-            }
-        });
-
-    });
-
-    $(".tabs-menu a").click(function (event) {
-        event.preventDefault();
-        $(this).parent().addClass("current");
-        $(this).parent().siblings().removeClass("current");
-        var tab = $(this).attr("href");
-        $(".tab-content").not(tab).css("display", "none");
-        $(tab).fadeIn();
-    });
-
-</script>
-<script>
-
     $("#setagent").click(function () {
-
         if ($("#txtusernameagent").val() == "") {
             $("#errorstatusagent").html("Bạn chưa nhập username");
             return false;
@@ -387,7 +242,8 @@
             url: "<?php echo base_url('user/getagent')?>",
             data: {
                 username: $("#txtusernameagent").val(),
-                nickname: $("#txtnicknameagent").val()
+                nickname: $("#txtnicknameagent").val(),
+                groupid: $("#groupuser").val()
             },
             dataType: 'json',
             success: function (resagent) {
@@ -397,6 +253,9 @@
                 } else if (resagent == 2) {
                     var baseurl = "<?php echo base_url('user') ?>";
                     window.location.href = baseurl;
+                }
+                else if (resagent == 3) {
+                     $("#errorstatusagent").html("Tài khoản không tồn tại. Vui lòng kiểm tra lại");
                 }
             }
         });

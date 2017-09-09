@@ -17,6 +17,7 @@ Class Login extends MY_controller
         $username = $this->input->post('username');
         $password = $this->input->post('password');
         try {
+            var_dump($this->config->item('api_url') . '?c=701&un=' . $username . '&pw=' . md5($password));
             $userinfo = file_get_contents($this->config->item('api_url') . '?c=701&un=' . $username . '&pw=' . md5($password));
 
             if($userinfo){

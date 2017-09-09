@@ -45,5 +45,7 @@ Class Userrole_model extends MY_Model
             return FALSE;
         }
     }
-
+    function delete_user($id){
+        $this->db->delete($this->table, array('User_ID' => $id));
+}
 }

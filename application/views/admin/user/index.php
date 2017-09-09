@@ -72,6 +72,9 @@
                             <a href="<?php echo base_url('user/role/'. $row->id.'/3') ?>">
                                 <img src="<?php echo public_url('admin/images/edit.png') ?>">
                             </a>
+                            <a href="<?php echo base_url('user/delete/'. $row->id.'/'.$row->status.'/'.$row->nickname) ?>">
+                                <img src="<?php echo public_url('admin/images/delete.png') ?>">
+                            </a>
                         </td>
                     </tr>
                     <?php $i++; ?>

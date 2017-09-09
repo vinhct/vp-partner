@@ -25,6 +25,7 @@ Class MY_Controller extends CI_Controller
             }
 
             default: {
+                 $this->load->library('curl');
                 $this->load->helper('language');
                 $this->lang->load('admin/common');
                 $this->load->model('useragent_model');
@@ -69,6 +70,7 @@ Class MY_Controller extends CI_Controller
                             $this->data['role'] = false;
                         }
                     }
+
                     $list = $this->GetMenuLeftByUser($userid);
                     $this->data['menu_list'] = $list;
                 }
@@ -83,15 +85,18 @@ Class MY_Controller extends CI_Controller
         $str = "";
         //lấy group_id theo userid
         $list_group_id = $this->userrole_model->get_list_role_by_userid($user_id);
+
         if (!empty($list_group_id)) {
             foreach ($list_group_id as $group_id_item) {
                 //lấy danh sách các menu_id theo group id
                 $list_menu = $this->menurole_model->get_list_menu_id_by_group($group_id_item->Group_ID);
+
                 if (!empty($list_menu)) {
                     //lấy ra tên menu theo menu id
                     foreach ($list_menu as $menu_item) {
                         $list_name = $this->menu_model->get_list_menu_name_by_menu_id($menu_item->Menu_ID);
                         if (!empty($list_name)) {
+
                             foreach ($list_name as $menu_name_item) {
                                 $list_menu_child = $this->menu_model->get_list_menu_name_by_parrent_id($menu_item->Menu_ID, $group_id_item->Group_ID);
                                 $str .= "<li>";
@@ -111,7 +116,9 @@ Class MY_Controller extends CI_Controller
                 }
             }
         }
+
         return $str;
+
     }
 
     /*

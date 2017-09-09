@@ -19,126 +19,18 @@ Class User extends MY_Controller
     {
         $message = $this->session->flashdata('message');
         $this->data['message'] = $message;
-        $input1['where']['isSuper'] = 1;
-        $list = $this->admin_model->get_list($input1);
-        $this->data['list'] = $list;
-        $listadmin = $this->admin_model->get_list_admin();
-        $this->data['listadmin'] = $listadmin;
-        $input3['where']['parentid'] = -1;
-        $listagent = $this->useragent_model->get_list($input3);
+        $input['where']['parentid'] = -1;
+        $listagent = $this->useragent_model->get_list($input);
         $this->data['listagent'] = $listagent;
         $this->data['temp'] = 'admin/user/index';
         $this->load->view('admin/main', $this->data);
 
     }
-    function congtrutien()
-    {    $this->load->library('mcrypt');
-        $mcrypt = new MCrypt();
-
-        $encrypted = $mcrypt->encrypt("Text to encrypt");
-
-        $decrypted = $mcrypt->decrypt($encrypted);
-        var_dump($encrypted);
-        $this->data['temp'] = 'admin/user/congtrutien';
-        $this->load->view('admin/main', $this->data);
-    }
-    function congtienajax(){
-        $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-        $admin_info = $this->admin_model->get_info($admin_login);
-        $otpselectcong = $this->input->post("otpselectcong");
-        $tienchuyen = $this->input->post("tienchuyen");
-        $money_type = $this->input->post("money_type");
-        $reasonchuyen = $this->input->post("reasonchuyen");
-        $maotpcong = $this->input->post("maotpcong");
-        $nickname = $this->input->post("nickname");
-        $action = $this->input->post("actionname");
-        $datainfo = file_get_contents($this->config->item('api_url') . '?c=100&nn=' . $nickname . '&mn=' . $tienchuyen .'&mt=' . $money_type. '&rs=' . urlencode($reasonchuyen). '&otp=' . $maotpcong . '&type=' . $otpselectcong.'&ac='.$action);
-        $data = json_decode($datainfo);
-        if (isset($data->success)) {
-            if ($data->success == true) {
-                if ($data->errorCode == 0) {
-                    echo json_encode("1");
-                    if($action == "Admin")
-                    $this->logadmin_model->create($this->logadmingiftcode(12, $nickname, $admin_info->UserName,"",$tienchuyen,$money_type));
-                    elseif($action == "EventVP"){
-                        $this->logadmin_model->create($this->logadmingiftcode(19, $nickname, $admin_info->UserName,"",$tienchuyen,$money_type));
-                    }
-                }
-            } else {
-                if ($data->errorCode == 1001) {
-                    echo json_encode("2");
-                }elseif($data->errorCode == 1002) {
-                    echo json_encode("3");
-                }elseif($data->errorCode == 1008) {
-                    echo json_encode("4");
-                }elseif($data->errorCode == 1021) {
-                    echo json_encode("5");
-                }elseif($data->errorCode == 2001) {
-                    echo json_encode("6");
-                }
-            }
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
-    function trutienajax(){
-        $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-        $admin_info = $this->admin_model->get_info($admin_login);
-        $otpselecttru = $this->input->post("otpselecttru");
-        $tienchuyen = $this->input->post("tienchuyen");
-        $money_type = $this->input->post("money_type");
-        $reasonchuyen = $this->input->post("reasonchuyen");
-        $maotptru = $this->input->post("maotptru");
-        $nickname = $this->input->post("nickname");
-        $action = $this->input->post("actionname");
-        $datainfo = file_get_contents($this->config->item('api_url') . '?c=100&nn=' . $nickname . '&mn=' . $tienchuyen .'&mt=' . $money_type. '&rs=' . urlencode($reasonchuyen) . '&otp=' . $maotptru . '&type=' . $otpselecttru."&ac=".$action);
-        $data = json_decode($datainfo);
-        if (isset($data->success)) {
-            if ($data->success == true) {
-                if ($data->errorCode == 0) {
-                    echo json_encode("1");
-                    if($action == "Admin")
-                        $this->logadmin_model->create($this->logadmingiftcode(12, $nickname, $admin_info->UserName,"",$tienchuyen,$money_type));
-                    elseif($action == "EventVP"){
-                        $this->logadmin_model->create($this->logadmingiftcode(19, $nickname, $admin_info->UserName,"",$tienchuyen,$money_type));
-                    }
-                }
-            } else {
-                if ($data->errorCode == 1001) {
-                    echo json_encode("2");
-                }elseif($data->errorCode == 1002) {
-                    echo json_encode("3");
-                }elseif($data->errorCode == 1008) {
-                    echo json_encode("4");
-                }elseif($data->errorCode == 1021) {
-                    echo json_encode("5");
-                }elseif($data->errorCode == 2001) {
-                    echo json_encode("6");
-                }
-            }
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
-
-    function getnicknameajax(){
-        $nickname = urlencode($this->input->post("nickname"));
-        $datainfo = file_get_contents($this->config->item('api_url') . '?c=716&nn=' . $nickname);
-        if(isset($datainfo)) {
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
-    /*
-     * Ham chinh sua thong tin quan tri vien
-     */
-
-
+    
     function logout()
     {
-        if ($this->session->userdata('user_AdminIxengClub_login')) {
-            $this->session->unset_userdata('user_AdminIxengClub_login');
+        if ($this->session->userdata('user_admindaily_login')) {
+            $this->session->unset_userdata('user_admindaily_login');
         }
         redirect(base_url('login'));
     }
@@ -146,209 +38,7 @@ Class User extends MY_Controller
         $this->data['temp'] = 'admin/user/resetpw';
         $this->load->view('admin/main', $this->data);
     }
-    function resetpwajax(){
-        $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-        $admin_info = $this->admin_model->get_info($admin_login);
-        $nickname = urlencode($this->input->post("nickname"));
-        $type = $this->input->post("type");
-        $otp = urlencode($this->input->post("otp"));
-        $datainfo = file_get_contents($this->config->item('api_url').'?c=14&nn='.$nickname.'&otp='.$otp.'&type='.$type);
-        if(isset($datainfo)) {
-            if($datainfo == 0){
-                $data = array(
-                    'account_name' => $nickname,
-                    'username' => $admin_info->UserName,
-                    'action' => "Reset password"
-                );
-                $this->logadmin_model->create($data);
-            }
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
-    function updatevpevent(){
-        $this->data['temp'] = 'admin/user/updatevpevent';
-        $this->load->view('admin/main', $this->data);
-    }
-    function updatevpajax(){
-        $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-        $admin_info = $this->admin_model->get_info($admin_login);
-        $nickname = urlencode($this->input->post("nickname"));
-        $type = $this->input->post("type");
-        $value = urlencode($this->input->post("value"));
-        $otp = urlencode($this->input->post("otp"));
-        $typeotp = $this->input->post("typeotp");
-        $datainfo = file_get_contents($this->config->item('api_url').'?c=726&nn='.$nickname.'&tu='.$type.'&va='.$value.'&otp='.$otp.'&type='.$typeotp);
-        if(isset($datainfo)) {
-            if($datainfo == 0){
-                if($type == 0){
-                    $data = array(
-                        'account_name' => $nickname,
-                        'username' => $admin_info->UserName,
-                        'action' => "Trừ vippoint event",
-                        'money' => -$value
-                    );
-                }else{
-                    $data = array(
-                        'account_name' => $nickname,
-                        'username' => $admin_info->UserName,
-                        'action' => "Cộng vippoint event",
-                        'money' => $value
-                    );
-                }
-
-                $this->logadmin_model->create($data);
-            }
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
-
-    function refundbonus(){
-        $this->data['temp'] = 'admin/agent/index';
-        $this->load->view('admin/main', $this->data);
-    }
-
-    function refundajax(){
-        $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-        $admin_info = $this->admin_model->get_info($admin_login);
-        $otp = urlencode($this->input->post("otp"));
-        $type = $this->input->post("type");
-        $datainfo = file_get_contents($this->config->item('api_url').'?c=711&otp='.$otp.'&type='.$type);
-        if(isset($datainfo)) {
-            if($datainfo == 0){
-            $data = array(
-                'username' => $admin_info->UserName,
-                'action' => "Hoàn trả phí đại lý"
-            );
-            $this->logadmin_model->create($data);}
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
-    function bonusajax(){
-        $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-        $admin_info = $this->admin_model->get_info($admin_login);
-        $otp = urlencode($this->input->post("otp"));
-        $type = $this->input->post("type");
-        $datainfo = file_get_contents($this->config->item('api_url').'?c=724&otp='.$otp.'&type='.$type);
-        if(isset($datainfo)) {
-            if($datainfo == 0){
-                $data = array(
-                    'username' => $admin_info->UserName,
-                    'action' => "Trả thưởng top doanh số đại lý"
-                );
-                $this->logadmin_model->create($data);}
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
-
-    function reportgc(){
-        $datainfo = json_decode(file_get_contents($this->config->item('api') . '?c=10'));
-        $this->data['listvin'] = $datainfo->giftcode_vin;
-        $this->data['listxu'] = $datainfo->giftcode_xu;
-        $source = $this->sourcegiftcode_model->get_source_gift_code_marketing_view();
-        $this->data['source'] = $source;
-        $sourcevh = $this->sourcegiftcode_model->get_source_gift_code_vanhanh_view();
-        $this->data['sourcevh'] = $sourcevh;
-        $list = $this->useragent_model->get_admin_gift_code();
-        $this->data['list'] = $list;
-        $this->data['temp'] = 'admin/user/reportgc';
-        $this->load->view('admin/main', $this->data);
-    }
-
-    function reportgcajax()
-    {
-        $roomvin = $this->input->post("roomvin");
-        $roomxu = $this->input->post("roomxu");
-        $nguonxuat = $this->input->post("nguonxuat");
-        $fromDate = urlencode($this->input->post("fromDate"));
-        $toDate = urlencode($this->input->post("toDate"));
-        $money = $this->input->post("money");
-        $filterdate = $this->input->post("filterdate");
-        $block = $this->input->post("block");
-        if($money == 1){
-            $datainfo = $this->get_data_curl($this->config->item('api_url').'?c=304&gp='.$roomvin.'&ts=' . $fromDate . '&te=' . $toDate . '&mt=' . $money .'&gs=' .$nguonxuat .'&type=&tt='.$filterdate.'&bl='.$block);
-        }
-        elseif($money == 0){
-            $datainfo = $this->get_data_curl($this->config->item('api_url').'?c=304&gp='.$roomxu.'&ts=' . $fromDate . '&te=' . $toDate . '&mt=' . $money .'&gs=' .$nguonxuat .'&type=&tt='.$filterdate.'&bl='.$block);
-        }
-        if(isset($datainfo)) {
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
-
-        function reportgcmktajax(){
-            $roomvin = $this->input->post("roomvin");
-            $roomxu = $this->input->post("roomxu");
-            $nguonxuat = $this->input->post("nguonxuat");
-            $fromDate = urlencode($this->input->post("fromDate"));
-            $toDate = urlencode($this->input->post("toDate"));
-            $money = $this->input->post("money");
-            $filterdate = $this->input->post("filterdate");
-            $block = $this->input->post("block");
-            if($money == 1){
-                $datainfo = $this->get_data_curl($this->config->item('api_url').'?c=304&gp='.$roomvin.'&ts=' . $fromDate . '&te=' . $toDate . '&mt=' . $money .'&gs=' .$nguonxuat .'&type=2&tt='.$filterdate.'&bl='.$block);
-            }
-            elseif($money == 0){
-                $datainfo = $this->get_data_curl($this->config->item('api_url').'?c=304&gp='.$roomxu.'&ts=' . $fromDate . '&te=' . $toDate . '&mt=' . $money .'&gs=' .$nguonxuat .'&type=2&tt='.$filterdate.'&bl='.$block);
-            }
-            if(isset($datainfo)) {
-                echo $datainfo;
-            }else{
-                echo "Bạn không được hack";
-            }
-        }
-
-    function reportgcvhajax(){
-        $roomvin = $this->input->post("roomvin");
-        $roomxu = $this->input->post("roomxu");
-        $nguonxuat = $this->input->post("nguonxuat");
-        $fromDate = urlencode($this->input->post("fromDate"));
-        $toDate = urlencode($this->input->post("toDate"));
-        $money = $this->input->post("money");
-        $filterdate = $this->input->post("filterdate");
-        $block = $this->input->post("block");
-        if($money == 1){
-            $datainfo = $this->get_data_curl($this->config->item('api_url').'?c=304&gp='.$roomvin.'&ts=' . $fromDate . '&te=' . $toDate . '&mt=' . $money .'&gs=' .$nguonxuat .'&type=3&tt='.$filterdate.'&bl='.$block);
-        }
-        elseif($money == 0){
-            $datainfo = $this->get_data_curl($this->config->item('api_url').'?c=304&gp='.$roomxu.'&ts=' . $fromDate . '&te=' . $toDate . '&mt=' . $money .'&gs=' .$nguonxuat .'&type=3&tt='.$filterdate.'&bl='.$block);
-        }
-        if(isset($datainfo)) {
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
-    function reportgcdlajax(){
-        $roomvin = $this->input->post("roomvin");
-        $roomxu = $this->input->post("roomxu");
-        $nguonxuat = $this->input->post("nguonxuat");
-        $fromDate = urlencode($this->input->post("fromDate"));
-        $toDate = urlencode($this->input->post("toDate"));
-        $money = $this->input->post("money");
-        $filterdate = $this->input->post("filterdate");
-
-        if($money == 1){
-            $datainfo = $this->get_data_curl($this->config->item('api_url').'?c=304&gp='.$roomvin.'&ts=' . $fromDate . '&te=' . $toDate . '&mt=' . $money .'&gs=' .$nguonxuat .'&type=1&tt='.$filterdate.'&bl=');
-        }
-        elseif($money == 0){
-            $datainfo = $this->get_data_curl($this->config->item('api_url').'?c=304&gp='.$roomxu.'&ts=' . $fromDate . '&te=' . $toDate . '&mt=' . $money .'&gs=' .$nguonxuat .'&type=1&tt='.$filterdate.'&bl=');
-        }
-        if(isset($datainfo)) {
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
+    
 
     function edit()
     {
@@ -448,7 +138,16 @@ Class User extends MY_Controller
         $this->data['temp'] = 'admin/user/role';
         $this->load->view('admin/main', $this->data);
     }
-
+    function get_list_role_select()
+    {
+        $str = "";
+        $input3['where']['type'] = 3;
+        $grouproles = $this->groupuser_model->get_list($input3);
+        foreach ($grouproles as $grouprole) {
+                $str .= "<option value='$grouprole->Name:$grouprole->Id'>$grouprole->Name</option>";
+        }
+        return $str;
+    }
     function get_list_role($id,$type)
     {
         $str = "";
@@ -484,8 +183,77 @@ Class User extends MY_Controller
     function add()
     {
         $listrole = $this->groupuser_model->get_list();
+        $group =$this->get_list_role_select();
+         $this->data['groupuser'] = $group;
         $this->data['listrole'] = $listrole;
         $this->data['temp'] = 'admin/user/add';
+         $this->data['error'] = '';
+         if( isset($_POST['create']) )
+        {
+
+            $info = $this->useragent_model->get_info_admin($this->input->post('username'));
+            $username = urlencode($this->input->post('username'));
+            $nickname = urlencode($this->input->post('nickname'));
+            if($username==null || $username=='' )
+            {
+                $this->data["error"]="UserName không được để trống";
+            }
+            else if($nickname==null|| $nickname==''){
+                $this->data["error"]="Nickname không được để trống";
+            }
+            else{
+                $groupid= $this->input->post('groupuser');
+                $type = explode(':', $groupid);
+                if($type[0]=="Quản trị"){
+                    $data = array(
+                        'username' => $username,
+                        'nickname' =>$nickname,
+                        'status' => "A",
+                        'parentid' => -1
+                    );
+                }
+                else{
+                    $data = array(
+                        'username' => $username,
+                        'nickname' =>$nickname,
+                        'status' => "P",
+                        'parentid' => -1
+                    );
+                }
+                $data1 = array(
+                    'username' => $username,
+                    'account_name' =>$nickname,
+                    'action' => "Thêm mới tài khoản đối tác"
+                );
+                if ($info != false) {
+                    $this->data["error"]="Tài khoản đã tồn tại";
+                  
+              
+                } else {
+                    $optinfo = readURLAPI($this->config->item('api_url') . '?c=103&nn='.$nickname.'&st=100');
+                    $obj = json_decode($optinfo);
+                    if($obj->{'success'}){
+                        $this->useragent_model->create($data);
+                        $this->logadmin_model->create($data1);
+                        //get ra id của bảng useragent
+                        $id =$this->useragent_model->get_max_id();
+                        //cập nhật bảng userrole
+                        $data_role = array(
+                        'User_ID' => $id,
+                        'Group_ID' =>$type[1],
+                        'Type' => "3",
+                    );
+                         $this->userrole_model->create($data_role);
+                       $this->data["error"]="Thêm mới tài khoản thành công";
+                      redirect(base_url('user'));
+                    }
+                    else{
+                      $this->data["error"]="Tài khoản không tồn tại. Vui lòng kiểm tra lại";
+                    
+                    }
+                }
+            }
+        }
         $this->load->view('admin/main', $this->data);
     }
     function getinfoajax(){
@@ -519,286 +287,16 @@ Class User extends MY_Controller
         }
     }
 
-    function getagent()
+    function delete($id,$status,$nickname)
     {
-        $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-        $admin_info = $this->admin_model->get_info($admin_login);
-        $info = $this->useragent_model->get_info_admin($this->input->post('username'));
-          $username = urlencode($this->input->post('username'));
-        $nickname = urlencode($this->input->post('nickname'));
-        $data = array(
-            'username' => $username,
-            'nickname' =>$nickname,
-            'status' => "A",
-            'parentid' => -1
-        );
-        $data1 = array(
-            'username' => $admin_info->UserName,
-            'account_name' =>$nickname,
-            'action' => "Thêm mới tài khoản admin đại lý"
-        );
-        if ($info != false) {
-            echo json_encode("1");
-            die();
-        } else {
-            $this->useragent_model->create($data);
-            $this->logadmin_model->create($data1);
-            $this->session->set_flashdata('message','<div class="form-group has-success successful"><label class="control-label" for="inputSuccess"><i class="fa fa-check"></i>Bạn thêm người dùng thành công</label></div>');
-            echo json_encode("2");
-        }
+         $this->useragent_model->delete($id);
+         $this->userrole_model->delete_user($id);
+         if($status=="P"){
+              $optinfo = readURLAPI($this->config->item('api_url') . '?c=103&nn='.$nickname.'&st=0');
+         }
+         $this->data["error"]="Xóa tài khoản thành công";
+          redirect(base_url('user'));
     }
 
-
-    function addadminajax(){
-        $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-        $admin_info = $this->admin_model->get_info($admin_login);
-        $username = urlencode($this->input->post('username'));
-        $nickname = urlencode($this->input->post('nickname'));
-        $status = urlencode($this->input->post('status'));
-        $data = array(
-            'UserName' => $username,
-            'FullName' =>$nickname,
-            'Status' => $status,
-            'isThuong'=> 2
-        );
-        $data1 = array(
-            'username' => $admin_info->UserName,
-            'account_name' =>$nickname,
-            'action' => "Thêm mới tài khoản admin"
-        );
-
-
-        $datainfo = file_get_contents($this->config->item('api_url').'?c=103&nn='.$nickname.'&st=100');
-        if(isset($datainfo)) {
-                if($datainfo == 0){
-                    $this->admin_model->create($data);
-                    if ($this->input->post('role') != null) {
-                        $where = array('FullName' =>  $this->input->post('nickname'));
-                        $user = $this->admin_model->get_info_rule($where);
-                        $data2 = array(
-                            'User_ID' => $user->ID,
-                            'Group_ID' => $this->input->post('role'),
-                            'Type' => 2
-                        );
-                        $this->userrole_model->create($data2);
-                    }
-                    $this->logadmin_model->create($data1);
-
-                    $this->session->set_flashdata('message','<div class="form-group has-success successful"><label class="control-label" for="inputSuccess"><i class="fa fa-check"></i>Bạn thêm người dùng thành công</label></div>');
-                }
-
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-
-    }
-
-    function delgiftcode()
-    {
-        $datainfo = json_decode(file_get_contents($this->config->item('api') . '?c=10'));
-
-        $this->data['listvin'] = $datainfo->giftcode_vin;
-        $source = $this->sourcegiftcode_model->get_source_gift_code_marketing_view();
-        $this->data['source'] = $source;
-        $sourcevh = $this->sourcegiftcode_model->get_source_gift_code_vanhanh_view();
-        $this->data['sourcevh'] = $sourcevh;
-        $this->data['temp'] = 'admin/user/delgiftcode';
-        $this->load->view('admin/main', $this->data);
-    }
-
-    function delgiftcodeajax()
-    {    $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-        $admin_info = $this->admin_model->get_info($admin_login);
-        $fromdate = urlencode($this->input->post("fromdate"));
-        $todate = urlencode($this->input->post("todate"));
-        $source = urlencode($this->input->post("nguonxuat"));
-        $price = urlencode($this->input->post("roomvin"));
-
-        $datainfo = $this->get_data_curl($this->config->item('api_url').'?c=604&gp='.$price.'&ts=' . $fromdate . '&te=' . $todate .'&gs=' .$source);
-        $data = json_decode($datainfo);
-        $num = $data->transactions->countGiftCode;
-        if(isset($datainfo)) {
-           if( $num > 0){
-                if($source == "" && $price == ""){
-                    $action = "Thu hồi giftcode được tạo từ ngày ".$this->input->post("fromdate")." đến ngày ".$this->input->post("todate")." số lượng: ".$num;
-                }else if($source == "" && $price != ""){
-                    $action = "Thu hồi giftcode được tạo từ ngày ".$this->input->post("fromdate")." đến ngày ".$this->input->post("todate")." số lượng: ".$num." mệnh giá ".$price." K Vin";
-                }
-                else if($source != "" && $price == ""){
-                    $action = "Thu hồi giftcode được tạo từ ngày ".$this->input->post("fromdate")." đến ngày ".$this->input->post("todate")." số lượng: ".$num." mã ".$source;
-                }
-                else if($source != "" && $price != ""){
-                    $action = "Thu hồi giftcode được tạo từ ngày ".$this->input->post("fromdate")." đến ngày ".$this->input->post("todate")." số lượng: ".$num." mệnh giá ".$price." K Vin , mã ".$source;
-                }
-               $data = array(
-                   'username' => $admin_info->UserName,
-                   'account_name' =>$admin_info->FullName,
-                   'action' => $action
-               );
-               $this->logadmin_model->create($data);
-           }
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
-
-    function congtientaixiu()
-    {
-        $this->data['error'] = "";
-        if ($this->input->post("ok")) {
-
-            if (file_exists('public/admin/uploads/congtientaixiu.csv')) {
-                unlink('public/admin/uploads/congtientaixiu.csv');
-                $this->data['error'] = "Bạn xóa file cũ thành công";
-            } else {
-                $temp = explode(".", $_FILES["filexls"]["name"]);
-                $extension = end($temp);
-                if ($extension == "csv") {
-                    $config = array("");
-                    $config['upload_path'] = './public/admin/uploads';
-                    $config['allowed_types'] = '*';
-                    $config['max_size'] = 1024 * 8;
-                    $config['overwrite'] = TRUE;
-                    $config['file_name'] = 'congtientaixiu';
-                    $this->load->library('upload', $config);
-                    $this->upload->initialize($config);
-
-                    if (!$this->upload->do_upload('filexls')) {
-                        $error = array('error' => $this->upload->display_errors());
-                        $this->data['error'] = "Bạn chưa chọn file hoặc không được phân quyền";
-
-                    } else {
-                        $this->data['error'] = "";
-                        $data = array('upload_data' => $this->upload->data());
-
-                        $this->data['error'] = "Upload file thành công";
-                    }
-                } else {
-                    $this->data['error'] = "Bạn chưa chọn file hoặc không chọn đúng file csv";
-                }
-            }
-
-        }
-        if (file_exists(FCPATH . "public/admin/uploads/congtientaixiu.csv") != false) {
-            $this->load->library('csvreader');
-            $result = $this->csvreader->parse_file(public_url('admin/uploads/congtientaixiu.csv'));
-            $data = array();
-            foreach ($result as $row) {
-                if (isset($row["Nickname"]) && isset($row["Money"])) {
-                    array_push($data,array($row["Nickname"]=> intval($row["Money"])));
-                }
-            }
-            $this->data['listnn'] = json_encode($data);
-
-        } else {
-            $this->data['listnn'] = "";
-        }
-        $this->data['temp'] = 'admin/user/congtientaixiu';
-        $this->load->view('admin/main', $this->data);
-    }
-
-    function congtientaixiuajax()
-    {
-        $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-        $admin_info = $this->admin_model->get_info($admin_login);
-        $nickname = $this->input->post("nickname");
-        $lydo = urlencode($this->input->post("lydo"));
-        $money = urlencode($this->input->post("money"));
-        $otp = urlencode($this->input->post("otp"));
-        $typeotp = $this->input->post("typeotp");
-        $action = $this->input->post("action");
-//        $server_output = file_get_contents($this->config->item('api_url')."?c=17&data=".$nickname."&mt=".$money."&rs=".$lydo."&otp=".$otp."&type=".$typeotp);
-//        var_dump($server_output);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$this->config->item('api_url'));
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,"c=17&data=".$nickname."&mt=".$money."&rs=".$lydo."&otp=".$otp."&type=".$typeotp."&ac=".$action);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch,CURLOPT_TIMEOUT,3600);
-
-        $server_output = curl_exec ($ch);
-
-        $data = json_decode($server_output);
-
-        if(isset($server_output)) {
-
-            if ($data->errorCode == 0) {
-                if($action == "Admin"){
-                    $this->logadmin_model->create($this->logadmingiftcode(20, $nickname, $admin_info->UserName,"",0,$money));
-                }elseif($action == "EventVP"){
-                    $this->logadmin_model->create($this->logadmingiftcode(19, $nickname, $admin_info->UserName,"",0,$money));
-                }
-
-
-                if (file_exists('public/admin/uploads/congtientaixiu.csv')) {
-
-                    unlink('public/admin/uploads/congtientaixiu.csv');
-                }
-            }
-            echo $server_output;
-        }else{
-            echo "Bạn không được hack";
-        }
-       curl_close ($ch);
-
-    }
-
-
-    function delsecuser()
-    {
-        $this->data['temp'] = 'admin/user/delsecuser';
-        $this->load->view('admin/main', $this->data);
-    }
-    function  huybaomat(){
-        $admin_login = $this->session->userdata('user_AdminIxengClub_login');
-        $admin_info = $this->admin_model->get_info($admin_login);
-        $nickname = $this->input->post('nickname');
-        $ac = $this->input->post('ac');
-        $type = $this->input->post('type');
-        $otp = $this->input->post('otp');
-        $action = $this->input->post('action');
-        $datainfo = file_get_contents($this->config->item('api_url') . '?c=22&nn=' . urlencode($nickname) . '&otp=' . $otp . '&type=' . $type.'&ac='.$ac.'&tu='.$action);
-        $data = json_decode($datainfo);
-        if(isset($datainfo)) {
-
-            if ($data->errorCode == 0) {
-                if($ac == 4 && $action == 0){
-                    $data = array(
-                        'action' => "Hủy bảo mật điện thoại",
-                        'account_name' => $nickname,
-                        'username' => $admin_info->UserName
-                    );
-
-                }elseif($ac == 5 && $action == 0){
-                    $data = array(
-                        'action' => "Hủy bảo mật email",
-                        'account_name' => $nickname,
-                        'username' => $admin_info->UserName
-                    );
-
-                }elseif($ac == 5 && $action == 1){
-                    $data = array(
-                        'action' => "Đăng ký bảo mật email",
-                        'account_name' => $nickname,
-                        'username' => $admin_info->UserName
-                    );
-
-                }elseif($ac == 4 && $action == 1){
-                    $data = array(
-                        'action' => "Đăng ký bảo mật điện thoại",
-                        'account_name' => $nickname,
-                        'username' => $admin_info->UserName
-                    );
-
-                }
-                $this->logadmin_model->create($data);
-            }
-            echo $datainfo;
-        }else{
-            echo "Bạn không được hack";
-        }
-    }
 
 }

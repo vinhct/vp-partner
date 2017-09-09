@@ -26,29 +26,9 @@ Class Useragent_model extends MY_Model
         }
     }
 
-    function  get_info_admin_parent($parentid){
-
-        $this->db->where('parentid',$parentid);
-        $query = $this->db->get($this->table);
-        if($query->result())
-        {
-            return $query->result();
-        }else{
-            return FALSE;
-        }
-    }
-    function  get_admin_gift_code(){
-
-        $this->db->where('key!=',null);
-        $this->db->where('parentid',-1);
-        $this->db->where('show',1);
-        $this->db->where('active',1);
-        $query = $this->db->get($this->table);
-        if($query->result())
-        {
-            return $query->result();
-        }else{
-            return FALSE;
-        }
-    }
+   function get_max_id(){
+    $this->db->select_max('id');
+    $query = $this->db->get($this->table)->row();
+    return $query->id;
+   }
 }

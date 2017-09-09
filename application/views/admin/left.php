@@ -17,16 +17,7 @@
                     <i class="fa fa-dashboard"></i><span>Trang chủ</span>
                 </a>
             </li>
-            <li>
-                <a href="<?php echo base_url("/menu") ?>">
-                    <i class="fa fa-dashboard"></i><span>Menu</span>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo base_url("/groupuser") ?>">
-                    <i class="fa fa-dashboard"></i><span>Nhóm menu</span>
-                </a>
-            </li>
+           
             <?php if (isset($admin_info)) :  ?>
                 <?php echo $menu_list; ?>
             <?php endif; ?>
