@@ -37,26 +37,3 @@ function readURLAPI($url) {
 
     return $data;
 }
-function lastday($month = '', $year = '') {
-       if (empty($month)) {
-          $month = date('m');
-       }
-       if (empty($year)) {
-          $year = date('Y');
-       }
-       $result = strtotime("{$year}-{$month}-01");
-       $result = strtotime('-1 second', strtotime('+1 month', $result));
-       return date('Y-m-d 23:59:59', $result);
-    }
-
-    function firstDay($month = '', $year = '')
-    {
-        if (empty($month)) {
-          $month = date('m');
-       }
-       if (empty($year)) {
-          $year = date('Y');
-       }
-       $result = strtotime("{$year}-{$month}-01");
-       return date('Y-m-d 00:00:00', $result);
-    } 
